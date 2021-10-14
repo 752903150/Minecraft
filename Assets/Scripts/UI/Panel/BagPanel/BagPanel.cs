@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Animations;
+using UnityEngine.EventSystems;
 
 public class BagPanel : MonoBehaviour
 {
@@ -13,6 +14,8 @@ public class BagPanel : MonoBehaviour
     public CompoundBag compoundBag;//合成栏
     public EndBag endBag;//合成产物表
 
+    public BagOther bagOther;//背包背景
+
     public GameObject followOBJ;
     FollowUI followUI;
     private void Start()
@@ -23,6 +26,34 @@ public class BagPanel : MonoBehaviour
         equipmentBag.SetFollow(followUI);
         compoundBag.SetFollow(followUI);
         endBag.SetFollow(followUI);
-        Debug.Log("成功设置");
+        bagOther.SetButtonOnClickedBack(LeftClickedBackGround, RightClickedBackGround);
+    }
+
+    
+    public int FastAddObj(ECube eCube, int num)
+    {
+        num = fastBag.FastAddObj(eCube, num);
+        if(num==0)
+        {
+            return 0;
+        }
+        num = mainBag.FastAddObj(eCube, num);
+        return num;
+    }
+
+    void LeftClickedBackGround()//左击背景
+    {
+        ECube eCube = followUI.GetCurrECube();
+        int objnum = followUI.GetObjNum();
+        followUI.CastOffAllObj();
+        Debug.Log("丢弃" + eCube + " " + objnum + "个");
+    }
+
+    void RightClickedBackGround()//右击背景
+    {
+        ECube eCube = followUI.GetCurrECube();
+        int objnum = followUI.GetObjNum();
+        followUI.CastOffOneObj();
+        Debug.Log("丢弃" + eCube + " " + 1 + "个");
     }
 }

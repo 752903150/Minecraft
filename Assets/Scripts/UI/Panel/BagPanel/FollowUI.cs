@@ -55,20 +55,21 @@ public class FollowUI : MonoBehaviour
 
     public void SetObj(ECube eCube, int num)
     {
-        if (eCube != CurrCube)
-        {
-            PrefabsManagerSystem.BackCubeTexture(CurrCube, ObjImage.sprite);
-            ObjImage.sprite = PrefabsManagerSystem.GetCubeTextureFromID(eCube);
-            CurrCube = eCube;
-        }
         ObjNum = num;
         if (ObjNum == 0)
         {
             NumText.text = "";
+            eCube = ECube.NORMAL;
         }
         else
         {
             NumText.text = ObjNum.ToString();
+        }
+        if (eCube != CurrCube)
+        {
+            PrefabsManagerSystem.BackCubeTexture(CurrCube, ObjImage.sprite);//回收资源
+            ObjImage.sprite = PrefabsManagerSystem.GetCubeTextureFromID(eCube);
+            CurrCube = eCube;
         }
     }
     public void SetNum(int num)
@@ -77,6 +78,7 @@ public class FollowUI : MonoBehaviour
         if (ObjNum == 0)
         {
             NumText.text = "";
+            CurrCube = ECube.NORMAL;
         }
         else
         {
@@ -89,6 +91,7 @@ public class FollowUI : MonoBehaviour
         if (ObjNum == 0)
         {
             NumText.text = "";
+            CurrCube = ECube.NORMAL;
         }
         else
         {
@@ -97,14 +100,24 @@ public class FollowUI : MonoBehaviour
     }
     public void SubNum()
     {
+        if(ObjNum==0)
+        {
+            return;
+        }
         ObjNum--;
         if (ObjNum == 0)
         {
             NumText.text = "";
+            CurrCube = ECube.NORMAL;
         }
         else
         {
             NumText.text = ObjNum.ToString();
+        }
+        if (CurrCube== ECube.NORMAL)
+        {
+            PrefabsManagerSystem.BackCubeTexture(CurrCube, ObjImage.sprite);//回收资源
+            ObjImage.sprite = PrefabsManagerSystem.GetCubeTextureFromID(ECube.NORMAL);
         }
     }
     public ECube GetCurrECube()
@@ -120,5 +133,15 @@ public class FollowUI : MonoBehaviour
     public void SetActivity(bool flag)
     {
         gameObject.SetActive(flag);
+    }
+
+    public void CastOffAllObj()//丢弃全部物品
+    {
+        SetObj(ECube.NORMAL, 0);
+    }
+
+    public void CastOffOneObj()//丢弃一个物品
+    {
+        SubNum();
     }
 }
